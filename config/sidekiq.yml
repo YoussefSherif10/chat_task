@@ -1,0 +1,11 @@
+:verbose: false
+development:
+  :concurrency: 1
+:queues:
+
+:timeout: 60
+:limits:
+  
+
+:schedule:
+  

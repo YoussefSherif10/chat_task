@@ -1,0 +1,59 @@
+version: "3"
+services:
+  db:
+    image: mysql
+    volumes:
+      - db-data:/var/lib/mysql
+    env_file: .env
+  redis:
+    image: redis
+  sidekiq:
+    depends_on:
+      - db
+      - redis
+      - elasticsearch
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.sidekiq
+      args:
+        - USER_ID=${USER_ID}
+        - GROUP_ID=${GROUP_ID}
+        - PLATFORM=${PLATFORM}
+    env_file: .env
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/home/dockeruser/app
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - USER_ID=${USER_ID}
+        - GROUP_ID=${GROUP_ID}
+        - PLATFORM=${PLATFORM}
+    volumes:
+      - .:/home/dockeruser/app
+    env_file: .env
+    entrypoint: docker/entrypoint.sh
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+      - redis
+      - elasticsearch
+  elasticsearch:
+    image: elasticsearch:7.17.18
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=password
+      - "ES_JAVA_OPTS=-Xms1G -Xmx1G"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+volumes:
+  db-data:
+  elasticsearch-data:
