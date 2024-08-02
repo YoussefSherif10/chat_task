@@ -2,10 +2,10 @@
 development:
   :concurrency: 1
 :queues:
-
+  - reindex_messages
+  - update_messages_count
 :timeout: 60
 :limits:
-  
-
-:schedule:
+  reindex_messages: 1
+  update_messages_count: 1
   

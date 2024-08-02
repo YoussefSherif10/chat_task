@@ -12,6 +12,8 @@ gem "redis-namespace", "~> 1.9.0"
 gem "searchkick"
 gem "elasticsearch"
 gem 'redis', '~> 4.8.0'
+gem 'kaminari'
+gem 'fast_jsonapi'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"

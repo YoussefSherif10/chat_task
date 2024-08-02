@@ -1,10 +1,10 @@
 class Message < ApplicationRecord
-  searchkick
+  searchkick text_middle: [:content]
   belongs_to :chat, counter_cache: true
   validates :number, uniqueness: { scope: :chat_id }
 
   before_create :set_message_number
-  after_commit :reindex, on: :create
+  after_commit :reindex_async, on: :create
 
   private
 
@@ -12,7 +12,7 @@ class Message < ApplicationRecord
     self.number = Utils.GenerateNumbers.generate_number(entity: Message)
   end
 
-  def reindex
-    self.reindex
+  def reindex_async
+    ReindexJob.perform_later(self)
   end
 end
