@@ -9,7 +9,7 @@ class Message < ApplicationRecord
   private
 
   def set_message_number
-    self.number = Utils.GenerateNumbers.generate_number(entity: Message)
+    self.number = Utils::GenerateNumbers.generate_number(entity: self.class)
   end
 
   def reindex_async

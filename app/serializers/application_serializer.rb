@@ -1,8 +1,5 @@
-class ApplicationSerializer
-  include FastJsonapi::ObjectSerializer
+class ApplicationSerializer < BaseSerializer
   attributes :name, :token, :chats_count
 
   has_many :chats
-
-  attribute :id, if: ->(_record, _params) { false }
 end

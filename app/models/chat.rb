@@ -8,6 +8,6 @@ class Chat < ApplicationRecord
   private
 
   def set_chat_number
-    self.number = Utils.GenerateNumbers.generate_number(entity: Chat)
+    self.number = Utils::GenerateNumbers.generate_number(entity: Chat)
   end
 end

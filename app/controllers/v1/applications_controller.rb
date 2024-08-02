@@ -43,6 +43,9 @@ class V1::ApplicationsController < ApplicationController
 
   def set_application
     @application = Application.find_by(token: params[:token])
+    unless @application
+      render json: { error: 'Application not found' }, status: :not_found
+    end
   end
 
   def application_params

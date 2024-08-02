@@ -15,7 +15,7 @@ class V1::ChatsController < ApplicationController
 
   # POST /applications/:token/chats
   def create
-    @chat = @application.chats.new(chat_params.merge(number: next_chat_number))
+    @chat = @application.chats.new
     if @chat.save
       render json: ChatSerializer.new(@chat).serialized_json, status: :created, location: v1_application_chat_url(@application.token, @chat.number)
     else
@@ -25,7 +25,7 @@ class V1::ChatsController < ApplicationController
 
   # PATCH/PUT /applications/:token/chats/:number
   def update
-    if @chat.update(chat_params)
+    if @chat.update
       render json: ChatSerializer.new(@chat).serialized_json
     else
       render json: @chat.errors, status: :unprocessable_entity
@@ -47,19 +47,17 @@ class V1::ChatsController < ApplicationController
   private
 
   def set_application
-    @application = Application.find_by!(token: params[:token])
+    @application = Application.find_by(token: params[:application_token])
+    unless @application
+      render json: { error: 'Application not found' }, status: :not_found
+    end
   end
 
   def set_chat
-    @chat = @application.chats.find_by!(number: params[:number])
-  end
-
-  def chat_params
-    params.require(:chat).permit(:messages_count)
-  end
-
-  def next_chat_number
-    @application.chats.maximum(:number).to_i + 1
+    @chat = @application.chats.find_by(number: params[:number])
+    unless @chat
+      render json: { error: 'Chat not found' }, status: :not_found
+    end
   end
 
   def pagination_meta(collection)
