@@ -18,7 +18,7 @@ class V1::ApplicationsController < ApplicationController
     @application = Application.new(application_params)
 
     if @application.save
-      render json: ApplicationSerializer.new(@application).serialized_json, status: :created, location: @application
+      render json: ApplicationSerializer.new(@application).serialized_json, status: :created, location: v1_application_url(@application)
     else
       render json: @application.errors, status: :unprocessable_entity
     end

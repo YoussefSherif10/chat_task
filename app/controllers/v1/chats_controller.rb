@@ -17,7 +17,7 @@ class V1::ChatsController < ApplicationController
   def create
     @chat = @application.chats.new(chat_params.merge(number: next_chat_number))
     if @chat.save
-      render json: ChatSerializer.new(@chat).serialized_json, status: :created, location: v1_application_chat_path(@application.token, @chat.number)
+      render json: ChatSerializer.new(@chat).serialized_json, status: :created, location: v1_application_chat_url(@application.token, @chat.number)
     else
       render json: @chat.errors, status: :unprocessable_entity
     end

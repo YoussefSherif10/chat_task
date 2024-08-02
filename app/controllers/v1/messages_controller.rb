@@ -18,7 +18,7 @@ class V1::MessagesController < ApplicationController
   def create
     @message = @chat.messages.new(message_params.merge(number: next_message_number))
     if @message.save
-      render json: MessageSerializer.new(@message).serialized_json, status: :created, location: @message
+      render json: MessageSerializer.new(@message).serialized_json, status: :created, location: v1_message_url(@application.token, @chat.number, @message.number)
     else
       render json: @message.errors, status: :unprocessable_entity
     end
