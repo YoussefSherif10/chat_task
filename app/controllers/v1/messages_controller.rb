@@ -16,7 +16,7 @@ class V1::MessagesController < ApplicationController
 
   # POST /applications/:token/chats/:number/messages
   def create
-    @message = @chat.messages.new(message_params.merge(number: next_message_number))
+    @message = @chat.messages.new
     if @message.save
       render json: MessageSerializer.new(@message).serialized_json, status: :created, location: v1_application_chat_message_url(@application.token, @chat.number, @message.number)
     else
@@ -64,10 +64,6 @@ class V1::MessagesController < ApplicationController
 
   def message_params
     params.require(:message).permit(:content)
-  end
-
-  def next_message_number
-    @chat.messages.maximum(:number).to_i + 1
   end
 
   def pagination_meta(collection)
