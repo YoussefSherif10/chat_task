@@ -1,5 +1,10 @@
 class MessageSerializer < BaseSerializer
   attributes :number, :content
 
-  belongs_to :chat
+  attributes :chat do |message|
+    {
+      number: message.chat.number,
+      messages_count: message.chat.messages_count
+    }
+  end
 end
