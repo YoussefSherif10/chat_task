@@ -40,8 +40,8 @@ class V1::ChatsController < ApplicationController
 
   # GET /applications/:token/chats/:number/search_messages
   def search_messages
-    messages = Message.search(params[:message_query], fields: [:content], match: :word_middle, where: { chat_id: @chat.id }, page: params[:page], per_page: params[:per_page])
-    render json: MessageSerializer.new(messages, meta: pagination_meta(messages)).serialized_json
+    messages = Message.search(params[:message_query], fields: [:content], where: { chat_id: @chat.id })
+    render json: MessageSerializer.new(messages).serialized_json
   end
 
   private
