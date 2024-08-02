@@ -1,6 +1,6 @@
 class V1::ChatsController < ApplicationController
   before_action :set_application
-  before_action :set_chat, only: %i[show update destroy search_messages]
+  before_action :set_chat, only: %i[show destroy search_messages]
 
   # GET /applications/:token/chats
   def index
@@ -18,15 +18,6 @@ class V1::ChatsController < ApplicationController
     @chat = @application.chats.new
     if @chat.save
       render json: ChatSerializer.new(@chat).serialized_json, status: :created, location: v1_application_chat_url(@application.token, @chat.number)
-    else
-      render json: @chat.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /applications/:token/chats/:number
-  def update
-    if @chat.update
-      render json: ChatSerializer.new(@chat).serialized_json
     else
       render json: @chat.errors, status: :unprocessable_entity
     end
