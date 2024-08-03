@@ -3,7 +3,7 @@ class V1::ApplicationsController < ApplicationController
 
   # GET /applications
   def index
-    applications = Application.page(params[:page]).per(params[:per_page])
+    applications = Application.includes(:chats).page(params[:page]).per(params[:per_page])
 
     render json: ApplicationSerializer.new(applications, meta: pagination_meta(applications)).serialized_json
   end
@@ -42,7 +42,7 @@ class V1::ApplicationsController < ApplicationController
   private
 
   def set_application
-    @application = Application.find_by(token: params[:token])
+    @application = Application.includes(:chats).find_by(token: params[:token])
     unless @application
       render json: { error: 'Application not found' }, status: :not_found
     end

@@ -4,7 +4,7 @@ class V1::ChatsController < ApplicationController
 
   # GET /applications/:token/chats
   def index
-    chats = @application.chats.page(params[:page]).per(params[:per_page])
+    chats = @application.chats.includes(:messages).page(params[:page]).per(params[:per_page])
     render json: ChatSerializer.new(chats, meta: pagination_meta(chats)).serialized_json
   end
 
@@ -45,7 +45,7 @@ class V1::ChatsController < ApplicationController
   end
 
   def set_chat
-    @chat = @application.chats.find_by(number: params[:number])
+    @chat = @application.chats.includes(:messages).find_by(number: params[:number])
     unless @chat
       render json: { error: 'Chat not found' }, status: :not_found
     end
